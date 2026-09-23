@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intermittent Chest Pain/Wellens’ Syndrome</title>
+<style>
+  :root {
+    --blue: #2D5F7C;
+    --orange: #E8833A;
+    --orange-dark: #c96b29;
+    --gray: #f3f5f6;
+    --border: #d9dee1;
+    --text: #24313a;
+    --muted: #5f6d75;
+    --white: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--white);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.55;
+  }
+
+  main {
+    width: min(700px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 28px 0 40px;
+  }
+
+  h1, h2, h3 {
+    color: var(--blue);
+    line-height: 1.25;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin: 0 0 18px;
+  }
+
+  h2 {
+    font-size: 1.45rem;
+    margin: 0 0 16px;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    margin: 22px 0 10px;
+  }
+
+  p {
+    margin: 0 0 14px;
+  }
+
+  .screen {
+    animation: fadeIn 0.15s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .card {
+    background: var(--gray);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+
+  .vitals {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .vital {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+
+  .vital strong {
+    display: block;
+    color: var(--blue);
+  }
+
+  .options {
+    display: grid;
+    gap: 12px;
+    margin: 18px 0;
+  }
+
+  .option {
+    width: 100%;
+    min-height: 52px;
+    text-align: left;
+    padding: 13px 15px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 9px;
+    color: var(--text);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .option:hover,
+  .option:focus {
+    border-color: var(--blue);
+    outline: none;
+  }
+
+  .option.selected {
+    border-color: var(--orange);
+    background: #fff8f2;
+  }
+
+  label {
+    display: block;
+    color: var(--blue);
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 105px;
+    resize: vertical;
+    padding: 12px;
+    border: 1px solid #aeb8be;
+    border-radius: 8px;
+    font: inherit;
+    background: white;
+  }
+
+  textarea:focus {
+    outline: 2px solid var(--blue);
+    outline-offset: 1px;
+  }
+
+  button.primary,
+  button.secondary {
+    min-height: 48px;
+    border-radius: 8px;
+    padding: 11px 18px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  button.primary {
+    background: var(--orange);
+    color: white;
+    border: 2px solid var(--orange);
+  }
+
+  button.primary:hover,
+  button.primary:focus {
+    background: var(--orange-dark);
+    border-color: var(--orange-dark);
+    outline: none;
+  }
+
+  button.secondary {
+    background: white;
+    color: var(--blue);
+    border: 2px solid var(--blue);
+  }
+
+  button.secondary:hover,
+  button.secondary:focus {
+    background: #eef4f7;
+    outline: none;
+  }
+
+  button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .consequence-label {
+    display: inline-block;
+    color: white;
+    background: var(--blue);
+    border-radius: 7px;
+    padding: 7px 11px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  .consequence-label.problematic {
+    background: #6e4141;
+  }
+
+  .consequence-label.acceptable {
+    background: #586a73;
+  }
+
+  .consequence-label.optimal {
+    background: var(--blue);
+  }
+
+  .next-decision {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-weight: bold;
+    color: var(--blue);
+  }
+
+  .path-entry {
+    background: var(--gray);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 12px 0;
+  }
+
+  .path-entry strong {
+    color: var(--blue);
+  }
+
+  .classification {
+    font-weight: bold;
+  }
+
+  .debrief-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .debrief-columns > section {
+    min-width: 0;
+  }
+
+  ul {
+    padding-left: 22px;
+  }
+
+  .small {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  @media (max-width: 600px) {
+    main {
+      width: min(100% - 22px, 700px);
+      padding-top: 18px;
+    }
+
+    h1 {
+      font-size: 1.65rem;
+    }
+
+    .debrief-columns {
+      grid-template-columns: 1fr;
+    }
+
+    .vitals {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+
+<body>
+<main id="app"></main>
+
+<script>
+"use strict";
+
+/*
+  Intermittent Chest Pain/Wellens’ Syndrome
+  All clinical content in this scenario is derived from the supplied case narrative.
+*/
+
+const CASE_TITLE = "Intermittent Chest Pain/Wellens’ Syndrome";
+
+const caseData = {
+  decisions: [
+    {
+      id: "D1",
+      title: "Decision 1",
+      update: `
+        <p>A 62 year-old-male presents with intermittent chest pain for 3 days. The pain is left sided and squeezing, associated with shortness of breath and nausea. Episodes have been increasing in frequency and severity over the last 2 days and have occurred with exertion and intermittently at rest. He is currently chest pain free.</p>
+        <p>His initial examination is without acute abnormal findings described in the case.</p>
+      `,
+      vitals: [
+        ["BP", "135/87"],
+        ["Pulse", "66"],
+        ["Temp(Oral)", "98.1 °F (36.7 °C)"],
+        ["Resp", "16"],
+        ["Wt", "92 kg (202 lb 13.2 oz)"],
+        ["SpO2", "98%"]
+      ],
+      options: [
+        {
+          id: "D1A",
+          text: "Obtain a rapid focused history and physical examination, place the patient on a cardiac monitor with IV access, and obtain a STAT ECG.",
+          classification: "Optimal",
+          outcome: "The initial evaluation proceeds with focused history and physical examination, monitoring and IV access, and a STAT ECG.",
+          reason: "The case identifies these as immediate evaluation actions for this patient with suspected acute coronary syndrome.",
+          next: "The initial ECG is now available for interpretation."
+        },
+        {
+          id: "D1B",
+          text: "Order a stress test to evaluate the intermittent chest pain before proceeding with further cardiac evaluation.",
+          classification: "Problematic",
+          outcome: "A stress test is ordered despite the patient's recent chest pain and the cardiac findings that subsequently emerge.",
+          reason: "The case specifically identifies stress testing as a non-recommended action when Wellens' T waves are present; if stress testing is continued, the simulation ends with ventricular fibrillation arrest.",
+          next: "The ECG findings are now available and require interpretation."
+        },
+        {
+          id: "D1C",
+          text: "Obtain the focused history and physical examination and proceed with the available diagnostic evaluation, including ECG, laboratory studies, and chest XR.",
+          classification: "Acceptable",
+          outcome: "The focused evaluation and diagnostic testing begin.",
+          reason: "The case lists focused history and physical examination, ECG, CBC, chemistries, coagulation studies, troponin, and chest XR among the initial evaluation.",
+          next: "The initial ECG is now available for interpretation."
+        }
+      ]
+    },
+
+    {
+      id: "D2",
+      title: "Decision 2",
+      update: `
+        <p>The patient remains without chest pain while the initial evaluation is underway. The first ECG is available. A previous ECG has also been obtained.</p>
+        <p>ECG #1 shows normal sinus rhythm with deep T wave inversions in the anterior leads (V3-V6). The previous ECG showed nonspecific T wave changes.</p>
+      `,
+      options: [
+        {
+          id: "D2A",
+          text: "Treat the anterior T wave inversions as a nonspecific finding and continue evaluation without changing the cardiac plan.",
+          classification: "Problematic",
+          outcome: "The concerning anterior T wave inversions are not recognized as a critical finding. During reassessment, the patient develops worsening chest pain.",
+          reason: "The case identifies deep T wave inversions in V3-V6 after recent chest pain as critical LAD stenosis consistent with Wellens' Syndrome.",
+          next: "The patient develops new chest pain and requires reassessment."
+        },
+        {
+          id: "D2B",
+          text: "Recognize the deep T wave inversions in V3-V6 in the setting of recent chest pain and compare them with the prior ECG.",
+          classification: "Optimal",
+          outcome: "The ECG change is recognized as a critical finding consistent with Wellens' Syndrome and critical LAD stenosis.",
+          reason: "The case specifically calls for recognition of the acute ECG change compared with the old ECG and identification of Wellens' T wave inversions.",
+          next: "Management of the Wellens' finding and cardiology consultation are considered."
+        },
+        {
+          id: "D2C",
+          text: "Focus on the fact that the patient is currently chest pain free and defer interpretation of the anterior T wave inversions until pain returns.",
+          classification: "Problematic",
+          outcome: "The patient remains without chest pain initially, but the critical ECG finding is not acted upon at this stage. The patient subsequently develops new chest pain.",
+          reason: "The case emphasizes that the deep T wave inversions occur with the patient currently chest pain free and should be recognized as critical LAD disease.",
+          next: "The patient develops new chest pain and requires reassessment."
+        }
+      ]
+    },
+
+    {
+      id: "D3",
+      title: "Decision 3",
+      update: `
+        <p>The ECG findings are concerning for Wellens' Syndrome. The patient has recently had recurrent exertional and resting chest pain and is currently being evaluated without chest pain.</p>
+      `,
+      options: [
+        {
+          id: "D3A",
+          text: "Consult cardiology and initiate anticoagulation with a plan of early PCI.",
+          classification: "Optimal",
+          outcome: "Cardiology is consulted and anticoagulation is initiated with a plan for early PCI.",
+          reason: "The case directs the participant to consult cardiology and initiate anticoagulation with a plan of early PCI when Wellens' deep T waves are recognized.",
+          next: "The patient develops recurrent chest pain during the evaluation."
+        },
+        {
+          id: "D3B",
+          text: "Arrange stress testing because the patient is currently without chest pain.",
+          classification: "Problematic",
+          outcome: "Stress testing is pursued despite the Wellens' ECG pattern. If the participant continues with the stress test, the simulation ends with ventricular fibrillation arrest.",
+          reason: "The case explicitly states that stress testing should not be ordered with Wellens' T waves and describes ventricular fibrillation arrest if the stress test is continued.",
+          next: "The patient develops a clinical deterioration requiring reassessment."
+        },
+        {
+          id: "D3C",
+          text: "Continue observation without cardiology consultation or anticoagulation because the patient is currently symptom free.",
+          classification: "Problematic",
+          outcome: "The concerning ECG finding is not followed by the case's recommended cardiology consultation and anticoagulation. During evaluation, the patient develops new chest pain.",
+          reason: "The case directs consultation and anticoagulation when Wellens' deep T waves are recognized.",
+          next: "The patient develops new chest pain and requires repeat assessment."
+        }
+      ]
+    },
+
+    {
+      id: "D4",
+      title: "Decision 4",
+      update: `
+        <p>As evaluation and testing continue, the patient develops new chest pain. The case specifies that this may occur after recognition of Wellens' anterior T waves and while the team is calling Cardiology.</p>
+      `,
+      options: [
+        {
+          id: "D4A",
+          text: "Repeat the ECG and reassess the patient when the chest pain returns.",
+          classification: "Optimal",
+          outcome: "The patient's recurrent chest pain triggers serial assessment and a repeat ECG.",
+          reason: "The case specifically identifies serial assessment and repeat ECG when chest pain returns and states that repeat ECG is required when the patient's condition changes.",
+          next: "The repeat ECG is now available for interpretation."
+        },
+        {
+          id: "D4B",
+          text: "Wait for the chest pain to resolve before obtaining another ECG because the earlier ECG has already been reviewed.",
+          classification: "Problematic",
+          outcome: "The repeat ECG is delayed despite a change in the patient's condition. The case calls for repeat ECG with the development of new chest pain.",
+          reason: "The case states that failure to order a repeat ECG with development of chest pain should prompt the participant to consider one.",
+          next: "The patient requires repeat ECG assessment after the change in symptoms."
+        },
+        {
+          id: "D4C",
+          text: "Continue the existing evaluation without repeating the ECG because the patient has already had an ECG during this encounter.",
+          classification: "Problematic",
+          outcome: "A repeat ECG is not initially obtained despite new chest pain. The case specifically prompts the participant to obtain a repeat ECG when chest pain develops.",
+          reason: "The case emphasizes repeat ECGs for patients with changes in condition and serial assessment when chest pain returns.",
+          next: "The patient's new chest pain requires a repeat ECG."
+        }
+      ]
+    },
+
+    {
+      id: "D5",
+      title: "Decision 5",
+      update: `
+        <p>The repeat ECG is available after the patient's chest pain returns.</p>
+        <p>ECG #2 shows ST elevations in the anterior leads.</p>
+      `,
+      options: [
+        {
+          id: "D5A",
+          text: "Recognize the anterior ST elevations as STEMI and activate the Cath Lab.",
+          classification: "Optimal",
+          outcome: "STEMI is recognized on ECG #2 and the Cath Lab is activated for urgent management.",
+          reason: "The case identifies recognition of STEMI on ECG #2 and recommends cardiac catheterization when STEMI is recognized.",
+          next: "Anticoagulation and definitive cardiac management are addressed."
+        },
+        {
+          id: "D5B",
+          text: "Continue observation and repeat the ECG later because the first ECG showed T wave inversions rather than ST elevations.",
+          classification: "Problematic",
+          outcome: "Recognition of STEMI is delayed despite the new ST elevations. The case warns that failure to recognize STEMI or recommend cardiac catheterization or thrombolysis results in prompting about the ECG changes; delays result in worsening cardiac ischemia and function.",
+          next: "The patient requires definitive STEMI management."
+        },
+        {
+          id: "D5C",
+          text: "Interpret the ST elevations as another nonspecific change and continue the current evaluation.",
+          classification: "Problematic",
+          outcome: "The STEMI is not recognized immediately. The case describes prompting regarding the ST elevations when they are not recognized and states that delays can result in worsening cardiac ischemia and function.",
+          next: "The patient requires definitive STEMI management."
+        },
+        {
+          id: "D5D",
+          text: "Recommend cardiac catheterization or thrombolysis after recognizing the ECG change.",
+          classification: "Acceptable",
+          outcome: "The new ECG change is treated as an indication for definitive reperfusion management.",
+          reason: "The case states that failure to recommend cardiac catheterization or thrombolysis after recognition of STEMI is a critical failure; it also identifies cardiac catheterization as the definitive path in this case.",
+          next: "Anticoagulation and definitive cardiac management are addressed."
+        }
+      ]
+    },
+
+    {
+      id: "D6",
+      title: "Decision 6",
+      update: `
+        <p>STEMI has been recognized. The patient is proceeding toward definitive cardiac management.</p>
+      `,
+      options: [
+        {
+          id: "D6A",
+          text: "Give aspirin 325mg and initiate appropriate anticoagulation; consider a loading dose of clopidogrel 600mg.",
+          classification: "Optimal",
+          outcome: "The medication plan follows the critical actions described in the case, including aspirin 325mg and anticoagulation, with consideration of clopidogrel 600mg.",
+          reason: "The case specifies aspirin 325mg and, when Wellens' or STEMI is recognized, anticoagulants such as enoxaparin, unfractionated heparin or bivalrudin, and consideration of clopidogrel 600mg.",
+          next: "The patient proceeds to the Cath lab."
+        },
+        {
+          id: "D6B",
+          text: "Continue definitive cardiac management without giving aspirin 325mg or initiating anticoagulation.",
+          classification: "Problematic",
+          outcome: "The critical medication actions described in the case are omitted while the patient proceeds toward definitive management.",
+          reason: "The case identifies aspirin 325mg and anticoagulation as critical medication actions for this scenario.",
+          next: "The patient proceeds to the Cath lab."
+        },
+        {
+          id: "D6C",
+          text: "Give aspirin 325mg and continue the definitive cardiac plan, without adding an intervention not described in the case.",
+          classification: "Acceptable",
+          outcome: "Aspirin 325mg is administered and the definitive cardiac plan continues.",
+          reason: "The case specifically requires aspirin 325mg. It also describes anticoagulation as an important action when Wellens' or STEMI is recognized.",
+          next: "The patient proceeds to the Cath lab."
+        }
+      ]
+    }
+  ],
+
+  intendedPath: [
+    "Perform focused history and physical examination; establish IV access and cardiac monitoring; obtain a STAT ECG and the initial diagnostic studies described in the case; give aspirin 325mg.",
+    "Recognize ECG #1 as normal sinus rhythm with deep T wave inversions in anterior leads (V3-V6), compare with the prior ECG showing nonspecific T wave changes, and recognize the finding as consistent with Wellens' Syndrome.",
+    "Consult Cardiology and initiate anticoagulation with a plan of early PCI.",
+    "When chest pain returns, perform serial assessment and obtain a repeat ECG.",
+    "Recognize ST elevations in the anterior leads on ECG #2 as STEMI and activate the Cath Lab, with cardiac catheterization or thrombolysis as the definitive reperfusion pathway described in the case.",
+    "Give aspirin 325mg and, when Wellens' or STEMI is recognized, give appropriate anticoagulation; the case also says to consider a loading dose of clopidogrel 600mg."
+  ],
+
+  teachingPoints: [
+    "Anterior T wave inversions are a sign of critical LAD disease.",
+    "Deep T wave inversions in V3-V6 in the setting of recent chest pain, including when the patient is currently chest pain free, are described in the case as Wellens' Syndrome.",
+    "Patients with suspected acute coronary syndrome require serial assessment and repeat ECG when chest pain returns or the patient's condition changes.",
+    "ECG #2 shows ST elevations in the anterior leads and requires recognition of STEMI.",
+    "When Wellens' deep T waves are recognized, the case calls for Cardiology consultation and anticoagulation with a plan of early PCI.",
+    "The patient should receive aspirin 325mg.",
+    "When chest pain returns, the patient should receive SL Nitroglycerin.",
+    "When Wellens' or STEMI is recognized, the case calls for anticoagulants including enoxaparin, unfractionated heparin or bivalrudin, and says to consider a loading dose of clopidogrel 600mg.",
+    "Stress testing should not be ordered with Wellens' T waves."
+  ],
+
+  commonErrors: [
+    "T wave inversions (Wellens') not recognized on ECG #1.",
+    "STEMI not recognized on ECG #2.",
+    "Failure to repeat the ECG when chest pain returns or the patient's condition changes.",
+    "Failure to activate the Cath Lab or recommend cardiac catheterization or thrombolysis when STEMI is recognized.",
+    "Ordering stress testing in a patient with Wellens' T waves.",
+    "Failure to recognize the need for anticoagulation and Cath Lab activation."
+  ]
+};
+
+let state = {
+  currentDecision: 0,
+  selectedOption: null,
+  reasoning: "",
+  path: [],
+  pendingConsequence: null
+};
+
+const app = document.getElementById("app");
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function renderStart() {
+  app.innerHTML = `
+    <section class="screen">
+      <h1>${escapeHtml(CASE_TITLE)}</h1>
+
+      <div class="card">
+        <p>A 62 year-old-male presents with intermittent left sided squeezing chest pain for 3 days. Episodes have been increasing in frequency and severity, occur with exertion and intermittently at rest, and are associated with shortness of breath and nausea; he is currently chest pain free.</p>
+        <p>He has a history of atrial fibrillation s/p ablation, CAD s/p stent to LAD 2009, hyperlipidemia, and hypertension.</p>
+      </div>
+
+      <div class="card">
+        <h2>Initial vital signs</h2>
+        <div class="vitals">
+          <div class="vital"><strong>BP</strong>135/87</div>
+          <div class="vital"><strong>Pulse</strong>66</div>
+          <div class="vital"><strong>Temp(Oral)</strong>98.1 °F (36.7 °C)</div>
+          <div class="vital"><strong>Resp</strong>16</div>
+          <div class="vital"><strong>Wt</strong>92 kg (202 lb 13.2 oz)</div>
+          <div class="vital"><strong>SpO2</strong>98%</div>
+        </div>
+      </div>
+
+      <button class="primary" id="beginBtn">Begin</button>
+    </section>
+  `;
+
+  document.getElementById("beginBtn").addEventListener("click", () => {
+    state = {
+      currentDecision: 0,
+      selectedOption: null,
+      reasoning: "",
+      path: [],
+      pendingConsequence: null
+    };
+    renderDecision();
+  });
+}
+
+function shuffle(array) {
+  const result = array.slice();
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function renderDecision() {
+  const decision = caseData.decisions[state.currentDecision];
+  state.selectedOption = null;
+  state.reasoning = "";
+
+  const shuffledOptions = shuffle(decision.options);
+
+  app.innerHTML = `
+    <section class="screen">
+      <h2>${escapeHtml(decision.title)}</h2>
+
+      <div class="card">
+        ${decision.update}
+        ${decision.vitals ? `
+          <div class="vitals">
+            ${decision.vitals.map(v => `
+              <div class="vital">
+                <strong>${escapeHtml(v[0])}</strong>${escapeHtml(v[1])}
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
+      </div>
+
+      <div class="options" id="options">
+        ${shuffledOptions.map(option => `
+          <button class="option" data-option-id="${escapeHtml(option.id)}">
+            ${escapeHtml(option.text)}
+          </button>
+        `).join("")}
+      </div>
+
+      <div class="card">
+        <label for="reasoning">Why?</label>
+        <textarea id="reasoning" placeholder="Enter one or two sentences explaining your reasoning."></textarea>
+      </div>
+
+      <button class="primary" id="submitBtn" disabled>Submit choice</button>
+    </section>
+  `;
+
+  const optionButtons = [...document.querySelectorAll(".option")];
+  const reasoningBox = document.getElementById("reasoning");
+  const submitBtn = document.getElementById("submitBtn");
+
+  optionButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      optionButtons.forEach(b => b.classList.remove("selected"));
+      button.classList.add("selected");
+      state.selectedOption = button.dataset.optionId;
+      updateSubmitState();
+    });
+  });
+
+  reasoningBox.addEventListener("input", () => {
+    state.reasoning = reasoningBox.value;
+    updateSubmitState();
+  });
+
+  function updateSubmitState() {
+    submitBtn.disabled =
+      !state.selectedOption ||
+      !state.reasoning.trim();
+  }
+
+  submitBtn.addEventListener("click", () => {
+    const option = decision.options.find(o => o.id === state.selectedOption);
+    const reasoning = state.reasoning.trim();
+
+    state.path.push({
+      decision: decision.title,
+      option: option.text,
+      classification: option.classification,
+      reasoning
+    });
+
+    state.pendingConsequence = option;
+    renderConsequence();
+  });
+}
+
+function renderConsequence() {
+  const option = state.pendingConsequence;
+
+  const labelClass = option.classification.toLowerCase();
+
+  app.innerHTML = `
+    <section class="screen">
+      <span class="consequence-label ${escapeHtml(labelClass)}">
+        ${escapeHtml(option.classification)}
+      </span>
+
+      <div class="card">
+        <p>${escapeHtml(option.outcome)}</p>
+        ${option.reason ? `<p>${escapeHtml(option.reason)}</p>` : ""}
+      </div>
+
+      <div class="next-decision">
+        Next decision: ${escapeHtml(option.next)}
+      </div>
+
+      <button class="primary" id="continueBtn">Continue</button>
+    </section>
+  `;
+
+  document.getElementById("continueBtn").addEventListener("click", () => {
+    if (state.currentDecision < caseData.decisions.length - 1) {
+      state.currentDecision += 1;
+      renderDecision();
+    } else {
+      renderDebrief();
+    }
+  });
+}
+
+function renderDebrief() {
+  const counts = state.path.reduce((acc, entry) => {
+    acc[entry.classification.toLowerCase()]++;
+    return acc;
+  }, { optimal: 0, acceptable: 0, problematic: 0 });
+
+  app.innerHTML = `
+    <section class="screen">
+      <h1>Debrief</h1>
+
+      <h2>Your path</h2>
+      <div>
+        ${state.path.map((entry, index) => `
+          <div class="path-entry">
+            <strong>${escapeHtml(entry.decision)}</strong>
+            <p><strong>Chosen option:</strong> ${escapeHtml(entry.option)}</p>
+            <p><strong>Classification:</strong> ${escapeHtml(entry.classification)}</p>
+            <p><strong>Why:</strong> ${escapeHtml(entry.reasoning)}</p>
+          </div>
+        `).join("")}
+      </div>
+
+      <div class="debrief-columns">
+        <section>
+          <h2>Intended path</h2>
+          <div class="card">
+            <ol>
+              ${caseData.intendedPath.map(step => `<li>${escapeHtml(step)}</li>`).join("")}
+            </ol>
+          </div>
+        </section>
+
+        <section>
+          <h2>Key teaching points</h2>
+          <div class="card">
+            <ul>
+              ${caseData.teachingPoints.map(point => `<li>${escapeHtml(point)}</li>`).join("")}
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <h2>Common learner errors</h2>
+      <div class="card">
+        <ul>
+          ${caseData.commonErrors.map(error => `<li>${escapeHtml(error)}</li>`).join("")}
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Path summary</h2>
+        <p>
+          Optimal: ${counts.optimal} |
+          Acceptable: ${counts.acceptable} |
+          Problematic: ${counts.problematic}
+        </p>
+      </div>
+
+      <div class="button-row">
+        <button class="primary" id="downloadBtn">Download results for your instructor</button>
+        <button class="secondary" id="restartBtn">Start over</button>
+      </div>
+    </section>
+  `;
+
+  document.getElementById("downloadBtn").addEventListener("click", downloadResults);
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    state = {
+      currentDecision: 0,
+      selectedOption: null,
+      reasoning: "",
+      path: [],
+      pendingConsequence: null
+    };
+    renderStart();
+  });
+}
+
+function downloadResults() {
+  const now = new Date();
+  const dateString =
+    now.getFullYear() + "-" +
+    String(now.getMonth() + 1).padStart(2, "0") + "-" +
+    String(now.getDate()).padStart(2, "0");
+
+  const counts = state.path.reduce((acc, entry) => {
+    acc[entry.classification.toLowerCase()]++;
+    return acc;
+  }, { optimal: 0, acceptable: 0, problematic: 0 });
+
+  let text = "";
+  text += "Case: " + CASE_TITLE + "\n";
+  text += "Date: " + dateString + "\n";
+  text += "\n";
+
+  state.path.forEach((entry, index) => {
+    text += "Step " + (index + 1) + "\n";
+    text += "Decision: " + entry.decision + "\n";
+    text += "Option chosen: " + entry.option + "\n";
+    text += "Classification: " + entry.classification + "\n";
+    text += "Learner reasoning: " + entry.reasoning + "\n";
+    text += "\n";
+  });
+
+  text += "Summary: " +
+    "Optimal: " + counts.optimal +
+    ", Acceptable: " + counts.acceptable +
+    ", Problematic: " + counts.problematic + "\n";
+
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+
+  anchor.href = url;
+  anchor.download = "case-results.txt";
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+renderStart();
+</script>
+</body>
+</html>
